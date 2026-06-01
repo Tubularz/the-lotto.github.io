@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lottery — A Fan Site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IM+Fell+English:ital@0;1&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1610;
+    --paper: #f2ead8;
+    --paper-dark: #e8dfc4;
+    --stone: #7a7060;
+    --rust: #8b3a2a;
+    --rust-light: #b54f3a;
+    --straw: #c4a55a;
+    --shadow: rgba(26,22,16,0.18);
+    --ff-display: 'Playfair Display', Georgia, serif;
+    --ff-body: 'IM Fell English', Georgia, serif;
+    --ff-mono: 'Courier Prime', 'Courier New', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--ink);
+    color: var(--paper);
+    font-family: var(--ff-body);
+    font-size: 18px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Grain overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: linear-gradient(to bottom, rgba(26,22,16,0.95), transparent);
+    backdrop-filter: blur(2px);
+  }
+
+  .nav-brand {
+    font-family: var(--ff-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--straw);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--ff-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--paper);
+    text-decoration: none;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+  }
+
+  .nav-links a:hover { opacity: 1; color: var(--straw); }
+
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--paper);
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--ink);
+    z-index: 99;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: var(--ff-display);
+    font-size: 2rem;
+    color: var(--paper);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--straw); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 70%, rgba(139,58,42,0.12) 0%, transparent 70%),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(242,234,216,0.012) 3px,
+        rgba(242,234,216,0.012) 4px
+      );
+  }
+
+  /* Decorative border lines */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 3rem;
+    border: 1px solid rgba(196,165,90,0.15);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--ff-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--straw);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: var(--ff-display);
+    font-size: clamp(4rem, 12vw, 9rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.5s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--rust-light);
+    display: block;
+  }
+
+  .hero-sub {
+    font-family: var(--ff-body);
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--stone);
+    max-width: 480px;
+    margin: 1.5rem auto 0;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.7s forwards;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 3.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.9s forwards;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .hero-meta-label {
+    font-family: var(--ff-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+  }
+
+  .hero-meta-value {
+    font-family: var(--ff-display);
+    font-size: 1.1rem;
+    color: var(--paper);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--ff-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 1s 1.4s forwards;
+  }
+
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: var(--stone);
+    animation: scrollLine 2s 1.5s ease-in-out infinite;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 2.5rem;
+    margin: 0;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(196,165,90,0.25);
+  }
+  .divider-glyph {
+    font-family: var(--ff-display);
+    font-size: 1.2rem;
+    color: var(--straw);
+    opacity: 0.5;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 6rem 0;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+  }
+
+  .section-label {
+    font-family: var(--ff-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--straw);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: var(--ff-display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--paper);
+    margin-bottom: 2rem;
+  }
+
+  .section-title em { font-style: italic; color: var(--rust-light); }
+
+  /* ── SYNOPSIS ── */
+  .synopsis-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .synopsis-text p {
+    color: rgba(242,234,216,0.75);
+    margin-bottom: 1.2rem;
+    font-size: 1.05rem;
+  }
+
+  .synopsis-text p:first-of-type::first-letter {
+    font-family: var(--ff-display);
+    font-size: 4rem;
+    font-weight: 900;
+    float: left;
+    line-height: 0.8;
+    margin-right: 0.1em;
+    margin-top: 0.1em;
+    color: var(--rust-light);
+  }
+
+  .synopsis-aside {
+    position: sticky;
+    top: 6rem;
+  }
+
+  .film-card {
+    border: 1px solid rgba(196,165,90,0.2);
+    padding: 2rem;
+    background: rgba(196,165,90,0.04);
+  }
+
+  .film-card-title {
+    font-family: var(--ff-display);
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--straw);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(196,165,90,0.2);
+  }
+
+  .film-detail {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(242,234,216,0.06);
+    font-size: 0.9rem;
+  }
+
+  .film-detail-label {
+    font-family: var(--ff-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone);
+  }
+
+  .film-detail-value { color: var(--paper); }
+
+  /* ── THEMES ── */
+  #themes { background: rgba(196,165,90,0.03); }
+
+  .themes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5px;
+    margin-top: 3rem;
+    background: rgba(196,165,90,0.15);
+  }
+
+  .theme-card {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s;
+    cursor: default;
+  }
+
+  .theme-card:hover { background: rgba(139,58,42,0.08); }
+
+  .theme-number {
+    font-family: var(--ff-display);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: rgba(196,165,90,0.12);
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  .theme-title {
+    font-family: var(--ff-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--paper);
+    margin-bottom: 0.75rem;
+  }
+
+  .theme-body {
+    font-size: 0.9rem;
+    color: rgba(242,234,216,0.6);
+    line-height: 1.65;
+  }
+
+  /* ── CAST ── */
+  .cast-list {
+    margin-top: 3rem;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid rgba(196,165,90,0.2);
+  }
+
+  .cast-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid rgba(196,165,90,0.1);
+    gap: 1rem;
+    transition: padding-left 0.2s;
+  }
+
+  .cast-row:hover { padding-left: 0.75rem; }
+
+  .cast-actor {
+    font-family: var(--ff-display);
+    font-size: 1.05rem;
+    color: var(--paper);
+  }
+
+  .cast-role {
+    font-family: var(--ff-body);
+    font-style: italic;
+    color: var(--stone);
+    font-size: 0.95rem;
+    text-align: right;
+  }
+
+  /* ── QUOTE ── */
+  .quote-section {
+    background: var(--rust);
+    padding: 6rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quote-section::before {
+    content: '\201C';
+    position: absolute;
+    top: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--ff-display);
+    font-size: 20rem;
+    color: rgba(0,0,0,0.12);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .quote-text {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+    line-height: 1.4;
+    color: var(--paper);
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .quote-attribution {
+    margin-top: 1.5rem;
+    font-family: var(--ff-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(242,234,216,0.6);
+    position: relative;
+  }
+
+  /* ── JACKSON ── */
+  .jackson-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .jackson-portrait {
+    aspect-ratio: 3/4;
+    background: rgba(196,165,90,0.06);
+    border: 1px solid rgba(196,165,90,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ff-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .jackson-text p {
+    color: rgba(242,234,216,0.72);
+    margin-bottom: 1.2rem;
+    font-size: 1.02rem;
+  }
+
+  .jackson-works {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(196,165,90,0.2);
+  }
+
+  .jackson-works-label {
+    font-family: var(--ff-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--straw);
+    margin-bottom: 1rem;
+  }
+
+  .works-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .works-list li {
+    font-family: var(--ff-body);
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--paper);
+    border: 1px solid rgba(196,165,90,0.25);
+    padding: 0.3rem 0.75rem;
+    transition: background 0.2s, border-color 0.2s;
+    cursor: default;
+  }
+
+  .works-list li:hover {
+    background: rgba(196,165,90,0.08);
+    border-color: rgba(196,165,90,0.5);
+  }
+
+  /* ── LOTTERY PICKER ── */
+  #picker { background: rgba(139,58,42,0.06); }
+
+  .picker-box {
+    border: 1px solid rgba(196,165,90,0.25);
+    padding: 3rem;
+    max-width: 560px;
+    margin: 3rem auto 0;
+    text-align: center;
+    background: rgba(26,22,16,0.4);
+  }
+
+  .picker-label {
+    font-family: var(--ff-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    margin-bottom: 1rem;
+  }
+
+  .picker-name {
+    font-family: var(--ff-display);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--paper);
+    min-height: 4.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+  }
+
+  .picker-name.chosen { color: var(--rust-light); }
+
+  .picker-btn {
+    margin-top: 2rem;
+    background: none;
+    border: 1px solid rgba(196,165,90,0.4);
+    color: var(--paper);
+    font-family: var(--ff-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.5rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+
+  .picker-btn:hover {
+    background: var(--rust);
+    border-color: var(--rust);
+  }
+
+  .picker-note {
+    margin-top: 1rem;
+    font-family: var(--ff-body);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--stone);
+    min-height: 1.4rem;
+    transition: opacity 0.3s;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(196,165,90,0.15);
+    padding: 3rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+    gap: 1rem;
+  }
+
+  .footer-left {
+    font-family: var(--ff-display);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--straw);
+  }
+
+  .footer-right {
+    font-family: var(--ff-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    color: var(--stone);
+    text-align: right;
+    line-height: 2;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes scrollLine {
+    0%   { transform: scaleY(0); transform-origin: top; }
+    50%  { transform: scaleY(1); transform-origin: top; }
+    51%  { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) {
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+
+    .synopsis-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .synopsis-aside { position: static; }
+    .themes-grid { grid-template-columns: 1fr 1fr; }
+    .jackson-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+    .jackson-portrait { display: none; }
+    footer { flex-direction: column; align-items: flex-start; }
+    .footer-right { text-align: left; }
+  }
+
+  @media (max-width: 560px) {
+    nav { padding: 1rem 1.25rem; }
+    .container { padding: 0 1.25rem; }
+    section { padding: 4rem 0; }
+    .hero::after { inset: 1.25rem; }
+    .themes-grid { grid-template-columns: 1fr; }
+    .picker-box { padding: 2rem 1.25rem; }
+    .cast-role { font-size: 0.85rem; }
+    .hero-meta { gap: 1.5rem; }
+    footer { padding: 2.5rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">The Lottery</a>
+  <ul class="nav-links">
+    <li><a href="#synopsis">Synopsis</a></li>
+    <li><a href="#themes">Themes</a></li>
+    <li><a href="#cast">Cast</a></li>
+    <li><a href="#jackson">Shirley Jackson</a></li>
+    <li><a href="#picker">The Draw</a></li>
+  </ul>
+  <button class="nav-hamburger" aria-label="Open menu" onclick="toggleMenu(this)">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#synopsis" onclick="closeMenu()">Synopsis</a>
+  <a href="#themes" onclick="closeMenu()">Themes</a>
+  <a href="#cast" onclick="closeMenu()">Cast</a>
+  <a href="#jackson" onclick="closeMenu()">Shirley Jackson</a>
+  <a href="#picker" onclick="closeMenu()">The Draw</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <p class="hero-eyebrow">A fan site dedicated to</p>
+  <h1 class="hero-title">The <em>Lottery</em></h1>
+  <p class="hero-sub">A short film adaptation of Shirley Jackson's harrowing 1948 tale of tradition, conformity, and the violence that hides in plain sight.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Year</span>
+      <span class="hero-meta-value">1969</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Runtime</span>
+      <span class="hero-meta-value">18 min</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Director</span>
+      <span class="hero-meta-value">Larry Yust</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="hero-meta-label">Story</span>
+      <span class="hero-meta-value">Shirley Jackson</span>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<div class="divider"><span class="divider-glyph">✦</span></div>
+
+<!-- SYNOPSIS -->
+<section id="synopsis">
+  <div class="container">
+    <div class="synopsis-grid">
+      <div class="synopsis-text reveal">
+        <p class="section-label">Synopsis</p>
+        <p>On a bright summer morning, the residents of a small New England village gather in the town square for the annual lottery. Children collect stones. Neighbours exchange pleasantries. The mood is festive — almost.</p>
+        <p>What follows is a masterclass in dread. Director Larry Yust's 1969 adaptation of Jackson's story strips the proceedings down to their bare, procedural horror: the familiar made monstrous, the communal made deadly.</p>
+        <p>The film endures because it refuses to explain itself. It simply shows us what people do when tradition provides cover for cruelty — and trusts the audience to sit with the discomfort.</p>
+      </div>
+      <div class="synopsis-aside reveal" style="transition-delay: 0.15s">
+        <div class="film-card">
+          <div class="film-card-title">Film Details</div>
+          <div class="film-detail">
+            <span class="film-detail-label">Director</span>
+            <span class="film-detail-value">Larry Yust</span>
+          </div>
+          <div class="film-detail">
+            <span class="film-detail-label">Produced by</span>
+            <span class="film-detail-value">Encyclopaedia Britannica</span>
+          </div>
+          <div class="film-detail">
+            <span class="film-detail-label">Year</span>
+            <span class="film-detail-value">1969</span>
+          </div>
+          <div class="film-detail">
+            <span class="film-detail-label">Runtime</span>
+            <span class="film-detail-value">18 minutes</span>
+          </div>
+          <div class="film-detail">
+            <span class="film-detail-label">Based on</span>
+            <span class="film-detail-value">The New Yorker, 1948</span>
+          </div>
+          <div class="film-detail">
+            <span class="film-detail-label">Format</span>
+            <span class="film-detail-value">Short / Educational film</span>
+          </div>
+          <div class="film-detail" style="border-bottom:none">
+            <span class="film-detail-label">Academy Award</span>
+            <span class="film-detail-value">Nominated, 1970</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-glyph">✦</span></div>
+
+<!-- THEMES -->
+<section id="themes">
+  <div class="container">
+    <p class="section-label reveal">Analysis</p>
+    <h2 class="section-title reveal">The story's <em>enduring</em> themes</h2>
+  </div>
+  <div class="themes-grid reveal">
+    <div class="theme-card">
+      <div class="theme-number">01</div>
+      <div class="theme-title">Tradition as tyranny</div>
+      <div class="theme-body">The lottery persists not because anyone defends its purpose — nobody can remember why it began — but because stopping feels more dangerous than continuing. Ritual becomes its own justification.</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-number">02</div>
+      <div class="theme-title">The banality of evil</div>
+      <div class="theme-body">Jackson's most unsettling achievement is making the villagers entirely ordinary. They are not monsters. They are neighbours, parents, children — which is precisely the point.</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-number">03</div>
+      <div class="theme-title">Conformity and silence</div>
+      <div class="theme-body">Those who sense something is wrong stay quiet. Dissent is isolated — Tessie's protest arrives only when the lot falls on her. The machinery of consensus is more powerful than any individual conscience.</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-number">04</div>
+      <div class="theme-title">Scapegoating</div>
+      <div class="theme-body">The lottery provides the community with a shared victim, releasing tension and binding the group together in collective guilt. The violence isn't incidental — it is the point.</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-number">05</div>
+      <div class="theme-title">Gender and power</div>
+      <div class="theme-body">Women draw on behalf of their husbands; wives share their husband's lot. The lottery's rituals encode a social hierarchy that goes largely unremarked — until it cannot be ignored.</div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-number">06</div>
+      <div class="theme-title">The pastoral lie</div>
+      <div class="theme-body">Summer sunlight, wildflowers, children at play. Jackson sets horror against idyllic normalcy with deliberate care. The village is a portrait of small-town America — and that is the warning.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-glyph">✦</span></div>
+
+<!-- CAST -->
+<section id="cast">
+  <div class="container">
+    <p class="section-label reveal">Performers</p>
+    <h2 class="section-title reveal">Cast &amp; <em>crew</em></h2>
+    <div class="cast-list reveal">
+      <div class="cast-row">
+        <span class="cast-actor">Ed Begley Jr.</span>
+        <span class="cast-role">Bill Hutchinson</span>
+      </div>
+      <div class="cast-row">
+        <span class="cast-actor">Olivia Cole</span>
+        <span class="cast-role">Tessie Hutchinson</span>
+      </div>
+      <div class="cast-row">
+        <span class="cast-actor">Roy Poole</span>
+        <span class="cast-role">Old Man Warner</span>
+      </div>
+      <div class="cast-row">
+        <span class="cast-actor">Forrest Compton</span>
+        <span class="cast-role">Mr. Summers</span>
+      </div>
+      <div class="cast-row">
+        <span class="cast-actor">Lloyd Gough</span>
+        <span class="cast-role">Mr. Graves</span>
+      </div>
+      <div class="cast-row">
+        <span class="cast-actor">Larry Yust</span>
+        <span class="cast-role">Director</span>
+      </div>
+      <div class="cast-row">
+        <span class="cast-actor">Shirley Jackson</span>
+        <span class="cast-role">Story (1948)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PULL QUOTE -->
+<div class="quote-section reveal">
+  <blockquote>
+    <p class="quote-text">"It isn't fair, it isn't right. We've always done it this way."</p>
+    <cite class="quote-attribution">Tessie Hutchinson — The Lottery</cite>
+  </blockquote>
+</div>
+
+<!-- SHIRLEY JACKSON -->
+<section id="jackson">
+  <div class="container">
+    <p class="section-label reveal">Background</p>
+    <h2 class="section-title reveal">Shirley <em>Jackson</em></h2>
+    <div class="jackson-layout">
+      <div class="jackson-portrait reveal">
+        [ Portrait placeholder — add an image here ]
+      </div>
+      <div class="jackson-text reveal" style="transition-delay: 0.15s">
+        <p>Shirley Jackson (1916–1965) was one of the most distinctive American writers of the twentieth century, celebrated for fiction that found horror in the domestic, the communal, and the ordinary.</p>
+        <p>"The Lottery" was first published in <em>The New Yorker</em> on June 26, 1948, and generated one of the largest volumes of reader mail the magazine had ever received — most of it angry, bewildered, or distressed. Jackson reportedly found this gratifying.</p>
+        <p>Her genius lay in writing about violence and dread with the tone of a polite social observer. She documented the rituals by which communities harm their own members, and she did it with a clarity that made readers deeply uncomfortable about what they recognised.</p>
+        <div class="jackson-works">
+          <p class="jackson-works-label">Selected works</p>
+          <ul class="works-list">
+            <li>The Road Through the Wall</li>
+            <li>The Lottery (1948)</li>
+            <li>Hangsaman</li>
+            <li>The Bird's Nest</li>
+            <li>The Haunting of Hill House</li>
+            <li>We Have Always Lived in the Castle</li>
+            <li>Come Along with Me</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-glyph">✦</span></div>
+
+<!-- LOTTERY PICKER -->
+<section id="picker">
+  <div class="container" style="text-align: center;">
+    <p class="section-label reveal">Interactive</p>
+    <h2 class="section-title reveal" style="justify-content: center; text-align: center;">Draw <em>your</em> slip</h2>
+    <p class="reveal" style="color: var(--stone); font-style: italic; font-size: 0.95rem; max-width: 400px; margin: 0 auto;">The village gathers. The box is opened. Whose name will be called today?</p>
+    <div class="picker-box reveal">
+      <p class="picker-label">This year's lottery</p>
+      <div class="picker-name" id="pickerName">— — —</div>
+      <button class="picker-btn" onclick="drawLottery()">Draw a slip</button>
+      <p class="picker-note" id="pickerNote">&nbsp;</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">The Lottery — Fan Site</div>
+  <div class="footer-right">
+    A fan tribute · Not affiliated with any rights holders<br>
+    Story © Shirley Jackson, 1948 · Film © Larry Yust, 1969<br>
+    Built with plain HTML &amp; CSS · Hosted on GitHub Pages
+  </div>
+</footer>
+
+<script>
+  /* ── Scroll reveal ── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  /* ── Mobile menu ── */
+  function toggleMenu(btn) {
+    btn.classList.toggle('open');
+    document.getElementById('mobileMenu').classList.toggle('open');
+    document.body.style.overflow = btn.classList.contains('open') ? 'hidden' : '';
+  }
+  function closeMenu() {
+    const btn = document.querySelector('.nav-hamburger');
+    btn.classList.remove('open');
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ── Lottery picker ── */
+  const names = [
+    'Bill Hutchinson','Tessie Hutchinson','Old Man Warner',
+    'Mr. Summers','Mr. Graves','Joe Dunbar','Harry Jones',
+    'Janey Dunbar','Nancy Hutchinson','Dave Hutchinson',
+    'Mrs. Delacroix','Clyde Dunbar','Mrs. Watson',
+    'Baxter Martin','Robert Jones'
+  ];
+  const notes = [
+    'It isn\'t fair. It isn\'t right.',
+    'Lottery in June, corn be heavy soon.',
+    'There\'s always been a lottery.',
+    'The black box grows shabbier each year.',
+    'Someone has to.',
+    'We can\'t let go of tradition.',
+    'Lucky to be alive today.'
+  ];
+  let shuffleInterval;
+
+  function drawLottery() {
+    const nameEl = document.getElementById('pickerName');
+    const noteEl = document.getElementById('pickerNote');
+    nameEl.classList.remove('chosen');
+    noteEl.textContent = '\u00a0';
+    clearInterval(shuffleInterval);
+
+    let count = 0;
+    shuffleInterval = setInterval(() => {
+      nameEl.textContent = names[Math.floor(Math.random() * names.length)];
+      count++;
+      if (count >= 22) {
+        clearInterval(shuffleInterval);
+        const chosen = names[Math.floor(Math.random() * names.length)];
+        nameEl.textContent = chosen;
+        nameEl.classList.add('chosen');
+        noteEl.textContent = notes[Math.floor(Math.random() * notes.length)];
+      }
+    }, 80);
+  }
+</script>
+</body>
+</html>
